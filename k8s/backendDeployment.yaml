@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodemon-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodemon-backend
+  template:
+    metadata:
+      labels:
+        app: nodemon-backend
+    spec:
+      containers:
+      - name: nodemon-backend
+        image: nodemon-backend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: nodemon-secret
+              key: ADMIN_USERNAME
+        - name: ADMIN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: nodemon-secret
+              key: ADMIN_PASSWORD

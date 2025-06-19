@@ -1,0 +1,7 @@
+node_modules/
+.env
+npm-debug.log
+# macOS
+.DS_Store
+run.sh
+stop.sh

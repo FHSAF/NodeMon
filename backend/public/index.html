@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NodeMon - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #212E53; 
+            color: #e5e7eb;
+        }
+
+        /* --- STYLES for Metric Cards --- */
+        .metric-card {
+            background-color: #212E53;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid #7BB0D7; 
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #e5e7eb; /* Off-white */
+        }
+        .card-value {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: #ffffff; /* Pure White */
+        }
+
+        .metric-card.active { 
+            transform: scale(1.05);
+        }
+        .metric-card[data-metric="cpu"].active { 
+            border-color: #9A4C84; /* Purple */
+            box-shadow: 0 0 20px rgba(154, 76, 132, 0.7);
+        }
+        .metric-card[data-metric="mem"].active { 
+            border-color: #BACC64; /* Green */
+            box-shadow: 0 0 20px rgba(186, 204, 100, 0.7);
+        }
+        .metric-card[data-metric="net"].active { 
+            border-color: #7BB0D7; /* Blue */
+            box-shadow: 0 0 20px rgba(123, 176, 215, 0.7);
+        }
+        
+        /* --- STYLES for the Toggle Switch --- */
+        .toggle-label { font-weight: 700; font-size: 0.875rem; transition: color 0.3s; }
+        .toggle-label.inactive { color: #7BB0D7; } 
+        
+        .toggle-container { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .toggle-track { width: 3.5rem; height: 2rem; background-color: #212E53; border: 2px solid #7BB0D7; border-radius: 9999px; padding: 0.125rem; display: flex; align-items: center; transition: all 0.3s; }
+        .toggle-thumb { width: 1.5rem; height: 1.5rem; background-color: #7BB0D7; border-radius: 9999px; transform: translateX(0); transition: all 0.3s; }
+        
+        /* Active state for the toggle */
+        .toggle-container.active .toggle-track { border-color: #E59400; } 
+        .toggle-container.active .toggle-thumb { background-color: #E59400; transform: translateX(1.5rem); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container mx-auto p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-bold text-[#E59400]">NodeMon</h1>
+            <p class="text-[#e5e7eb]">Real-Time System Dashboard</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+            <div id="cpu-card" class="metric-card" data-metric="cpu">
+                <h2 class="card-title">CPU Usage</h2><p class="card-value">-</p>
+            </div>
+            <div id="mem-card" class="metric-card" data-metric="mem">
+                <h2 class="card-title">Memory Usage</h2><p class="card-value">-</p>
+            </div>
+            <div id="net-card" class="metric-card" data-metric="net">
+                <h2 class="card-title">Network I/O</h2><p class="card-value">-</p>
+            </div>
+        </div>
+        
+        <div class="bg-[#212E53] border-2 border-[#7BB0D7] p-4 rounded-lg mb-10 flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
+            
+            <div class="flex items-center gap-3">
+                <span class="font-bold text-white">Chart Type:</span>
+                <div id="chart-toggle" class="toggle-container">
+                    <span id="line-label" class="toggle-label text-white">Line</span>
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    <span id="bar-label" class="toggle-label inactive">Bar</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <label for="history-size" class="font-bold text-white">History (sec):</label>
+                <input type="number" id="history-size" min="5" max="60" value="20" class="bg-[#212E53] text-white rounded-md p-2 w-20 text-center border-2 border-[#7BB0D7] focus:border-[#E59400] focus:ring-0 outline-none">
+            </div>
+        </div>
+
+        <div class="bg-[#212E53] border-2 border-[#7BB0D7] p-6 rounded-lg">
+            <h2 id="chart-title" class="text-xl font-bold text-white mb-4">Live Data Chart</h2>
+            <div class="relative h-96 w-full">
+                <canvas id="dataChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/js/app.js"></script>
+</body>
+</html>
